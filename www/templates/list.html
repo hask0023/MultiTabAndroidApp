@@ -1,0 +1,18 @@
+<!--Task list-->
+<ion-view view-title="Midterm List App">
+    <ion-content>
+        <form name="taskform" id="">
+            <input id="add-task" name="add-task" type="text" placeholder="new task" ng-model="$parent.taskName" />
+            <input id="taskBtn" type="submit" value="add task" ng-click="addTask()"></input>
+        </form>
+        <ion-list show-delete="shouldShowDelete">
+            <ion-toggle ng-model="shouldShowDelete">Enable Deleting</ion-toggle>
+            <ion-item ng-repeat="task in taskList track by $index">
+                <ion-checkbox ng-checked="task.completed" ng-change="updateCompletion()" ng-model="task.completed"> {{task.name}} </ion-checkbox>
+                <ion-delete-button class="ion-minus-circled" ng-click="deleteTask(taskList.indexOf(task))"></ion-delete-button>
+
+            </ion-item>
+        </ion-list>
+
+    </ion-content>
+</ion-view>
