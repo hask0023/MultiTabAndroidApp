@@ -7,53 +7,71 @@ angular.module('starter.controllers', [])
     if (localStorageService.isSupported) {
 
         var currentKey = $stateParams.listID;
-       
+
         var storageInfoList1 = localStorageService.get(currentKey) || [];
         $scope.taskList = storageInfoList1;
         $scope.localList = {};
 
-// ADD ITEMS
+        // ADD ITEMS
         $scope.addTask = function () {
-           
-            if ($scope.taskName) {
-              
 
-                $scope.taskList.push({
-                    "name": $scope.taskName,
-                    "completed": false
-                });
-                $scope.taskName = "";
-                localStorageService.set(currentKey, $scope.taskList);
-             
+                if ($scope.taskName) {
+
+
+                    $scope.taskList.push({
+                        "name": $scope.taskName,
+                        "completed": false
+                    });
+                    $scope.taskName = "";
+                    localStorageService.set(currentKey, $scope.taskList);
+
+
+                }
 
             }
-
-        }
-// DELETE ITEMS
+            // DELETE ITEMS
         $scope.deleteTask = function (index) {
-            //  $scope.tasklist.splice(index, 1);
+         
             $scope.taskList.splice(index, 1);
             localStorageService.set(currentKey, $scope.taskList);
         }
 
-// TOGGLING COMPLETION ON/OFF 
+        // TOGGLING COMPLETION ON/OFF 
         $scope.updateCompletion = function () {
+                // get local storage settings info
+                var storageInfoNotifications = localStorageService.get("Notifications") || [];
+                var storageInfoVibration = localStorageService.get("Vibration") || [];
 
-            localStorageService.set(currentKey, $scope.taskList);
+
+                $scope.notifyStatus = storageInfoNotifications;
+                $scope.vibrateStatus = storageInfoVibration;
+
+
+
+
+                localStorageService.set(currentKey, $scope.taskList);
                 // check to see if ALL boxes are checked
                 var numChecked = $filter('filter')($scope.taskList, function (task) {
                     return task.completed
                 }).length;
-            
+
+
+
+
                 // notify that the list is complete
                 if ($scope.taskList.length == numChecked) {
-                    doneList();
+
+                    if (storageInfoNotifications.checked) {
+                        doneList();
+                    }
+
                 }
 
 
                 //vibrate device whenever completion status changes
-                $cordovaVibration.vibrate(100);
-             
+                if (storageInfoVibration.checked) {
+                    $cordovaVibration.vibrate(100);
+                }
 
 
             }
@@ -73,11 +91,41 @@ angular.module('starter.controllers', [])
     if (!localStorageService.isSupported) {
         console.log('local storage not supported')
     }
+})
+
+.controller('SettingsCtrl', function ($scope, localStorageService, $stateParams) {
+
+    if (localStorageService.isSupported) {
+
+
+
+        var storageInfoNotifications = localStorageService.get("Notifications") || [];
+        var storageInfoVibration = localStorageService.get("Vibration") || [];
+
+
+        $scope.notifyStatus = storageInfoNotifications;
+        $scope.vibrateStatus = storageInfoVibration;
+
+
+
+        // function on notification toggle
+        $scope.notificationChange = function () {
+
+
+            var changeStatus = {
+                checked: $scope.notifyStatus.checked
+            };
+            localStorageService.set("Notifications", changeStatus);
+
+        }
+        // function on vibration toggle
+        $scope.vibrationChange = function () {
+
+            var changeStatus = {
+                checked: $scope.vibrateStatus.checked
+            };
+            localStorageService.set("Vibration", changeStatus);
+        }
+    }
+
 });
-
-
-
-
-
-
-

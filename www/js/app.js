@@ -25,6 +25,18 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ngCordova', 'LocalSt
    
   })
   
+  .state('app.settings',{
+      url: '/settings',
+      views: {
+          'menuContent': {
+              templateUrl: 'templates/settings.html',
+              controller: 'SettingsCtrl'
+          }
+      }
+      
+      
+  })
+  
    .state('app.list', {
     url: '/list/:listID',
     views: {
