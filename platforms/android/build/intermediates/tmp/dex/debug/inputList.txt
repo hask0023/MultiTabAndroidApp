@@ -1,0 +1,5 @@
+/Users/stevehaskins/MultiTabAndroidApp/platforms/android/build/intermediates/classes/debug
+/Users/stevehaskins/MultiTabAndroidApp/platforms/android/build/intermediates/pre-dexed/debug/support-annotations-23.1.0-ab2c7391acee46a6725da637e8f37165eaae5dcb.jar
+/Users/stevehaskins/MultiTabAndroidApp/platforms/android/build/intermediates/pre-dexed/debug/classes-352ca0dbf5469ec0aa5e6d9ef2da4c9f4513e751.jar
+/Users/stevehaskins/MultiTabAndroidApp/platforms/android/build/intermediates/pre-dexed/debug/internal_impl-23.1.0-e4ad1d35e2f47f4d62f4310893c98557de12c1c2.jar
+/Users/stevehaskins/MultiTabAndroidApp/platforms/android/build/intermediates/pre-dexed/debug/classes-b8bc8b6dace8e461b226fe39899213355f4468e3.jar
