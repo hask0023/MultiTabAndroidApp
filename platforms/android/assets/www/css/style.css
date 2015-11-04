@@ -1,0 +1,24 @@
+/* Empty. Add your own CSS if you like */
+#add-task {
+   width: 200px;
+   border: 1px solid black;
+    padding: 5px;
+    margin: 10px;
+   
+}
+
+#taskBtn {
+    margin: 10px;
+    color: #ffffff;
+    border-radius: 28px;
+    -webkit-border-radius: 28;
+    -moz-border-radius: 28;
+    background: #3498db;
+    
+}
+
+#listItemId {
+    font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif;
+    font-size: large;
+    
+}
