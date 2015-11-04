@@ -38,6 +38,8 @@ angular.module('starter.controllers', [])
 
         // TOGGLING COMPLETION ON/OFF 
         $scope.updateCompletion = function () {
+            
+      
                 // get local storage settings info
                 var storageInfoNotifications = localStorageService.get("Notifications") || [];
                 var storageInfoVibration = localStorageService.get("Vibration") || [];
@@ -70,7 +72,9 @@ angular.module('starter.controllers', [])
 
                 //vibrate device whenever completion status changes
                 if (storageInfoVibration.checked) {
+                
                     $cordovaVibration.vibrate(100);
+                 
                 }
 
 
