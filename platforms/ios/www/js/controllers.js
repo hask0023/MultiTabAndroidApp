@@ -1,56 +1,135 @@
 angular.module('starter.controllers', [])
 
-.controller('AppCtrl', function($scope, $ionicModal, $timeout) {
 
-  // With the new view caching in Ionic, Controllers are only called
-  // when they are recreated or on app start, instead of every page change.
-  // To listen for when this page is active (for example, to refresh data),
-  // listen for the $ionicView.enter event:
-  //$scope.$on('$ionicView.enter', function(e) {
-  //});
+.controller('ListCtrl', function ($scope, localStorageService, $stateParams, $cordovaVibration, $filter, $cordovaLocalNotification) {
 
-  // Form data for the login modal
-  $scope.loginData = {};
 
-  // Create the login modal that we will use later
-  $ionicModal.fromTemplateUrl('templates/login.html', {
-    scope: $scope
-  }).then(function(modal) {
-    $scope.modal = modal;
-  });
+    if (localStorageService.isSupported) {
 
-  // Triggered in the login modal to close it
-  $scope.closeLogin = function() {
-    $scope.modal.hide();
-  };
+        var currentKey = $stateParams.listID;
 
-  // Open the login modal
-  $scope.login = function() {
-    $scope.modal.show();
-  };
+        var storageInfoList1 = localStorageService.get(currentKey) || [];
+        $scope.taskList = storageInfoList1;
+        $scope.localList = {};
 
-  // Perform the login action when the user submits the login form
-  $scope.doLogin = function() {
-    console.log('Doing login', $scope.loginData);
+        // ADD ITEMS
+        $scope.addTask = function () {
 
-    // Simulate a login delay. Remove this and replace with your login
-    // code if using a login system
-    $timeout(function() {
-      $scope.closeLogin();
-    }, 1000);
-  };
+                if ($scope.taskName) {
+
+
+                    $scope.taskList.push({
+                        "name": $scope.taskName,
+                        "completed": false
+                    });
+                    $scope.taskName = "";
+                    localStorageService.set(currentKey, $scope.taskList);
+
+
+                }
+
+            }
+            // DELETE ITEMS
+        $scope.deleteTask = function (index) {
+         
+            $scope.taskList.splice(index, 1);
+            localStorageService.set(currentKey, $scope.taskList);
+        }
+
+        // TOGGLING COMPLETION ON/OFF 
+        $scope.updateCompletion = function () {
+            
+      
+                // get local storage settings info
+                var storageInfoNotifications = localStorageService.get("Notifications") || [];
+                var storageInfoVibration = localStorageService.get("Vibration") || [];
+
+
+                $scope.notifyStatus = storageInfoNotifications;
+                $scope.vibrateStatus = storageInfoVibration;
+
+
+
+
+                localStorageService.set(currentKey, $scope.taskList);
+                // check to see if ALL boxes are checked
+                var numChecked = $filter('filter')($scope.taskList, function (task) {
+                    return task.completed
+                }).length;
+
+
+
+
+                // notify that the list is complete
+                if ($scope.taskList.length == numChecked) {
+
+                    if (storageInfoNotifications.checked) {
+                        doneList();
+                    }
+
+                }
+
+
+                //vibrate device whenever completion status changes
+                if (storageInfoVibration.checked) {
+                
+                    $cordovaVibration.vibrate(100);
+                 
+                }
+
+
+            }
+            //function for notification
+        var doneList = function () {
+            $cordovaLocalNotification.schedule({
+                id: 1,
+                title: "List Complete!",
+                text: "You have completed all items on this list!"
+            })
+        };
+
+
+
+    }
+
+    if (!localStorageService.isSupported) {
+        console.log('local storage not supported')
+    }
 })
 
-.controller('PlaylistsCtrl', function($scope) {
-  $scope.playlists = [
-    { title: 'Reggae', id: 1 },
-    { title: 'Chill', id: 2 },
-    { title: 'Dubstep', id: 3 },
-    { title: 'Indie', id: 4 },
-    { title: 'Rap', id: 5 },
-    { title: 'Cowbell', id: 6 }
-  ];
-})
+.controller('SettingsCtrl', function ($scope, localStorageService, $stateParams) {
 
-.controller('PlaylistCtrl', function($scope, $stateParams) {
+    if (localStorageService.isSupported) {
+
+
+
+        var storageInfoNotifications = localStorageService.get("Notifications") || [];
+        var storageInfoVibration = localStorageService.get("Vibration") || [];
+
+
+        $scope.notifyStatus = storageInfoNotifications;
+        $scope.vibrateStatus = storageInfoVibration;
+
+
+
+        // function on notification toggle
+        $scope.notificationChange = function () {
+
+
+            var changeStatus = {
+                checked: $scope.notifyStatus.checked
+            };
+            localStorageService.set("Notifications", changeStatus);
+
+        }
+        // function on vibration toggle
+        $scope.vibrationChange = function () {
+
+            var changeStatus = {
+                checked: $scope.vibrateStatus.checked
+            };
+            localStorageService.set("Vibration", changeStatus);
+        }
+    }
+
 });
